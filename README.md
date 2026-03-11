@@ -1,2 +1,2 @@
 # AI-chatbot
-Here we created an AI chatbot for student queries
+Here we created an AI chatbot for solving student queries.
