@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Helpdesk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+    <style>
+        /* Blueprint Background */
+        .blueprint-bg {
+            background-color: #f1f5f9;
+            background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        /* Animations */
+        @keyframes popIn {
+            0% { opacity: 0; transform: translateY(10px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .msg-animate { animation: popIn 0.3s forwards; }
+        .typing-dot { animation: typingBounce 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        /* Scrollbar */
+        #chat-window::-webkit-scrollbar { width: 6px; }
+        #chat-window::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+    /* 1. Dynamic Page Background */
+    body {
+        background-color: #f3f4f6;
+        background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+        background-size: 20px 20px;
+    }
+
+    /* 2. Premium Shadow for the Main Chat Box */
+    #chat-container {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(10px);
+    }
+
+    /* 3. Smooth Hover Effects for the Send Button & Quick Actions */
+    button {
+        transition: all 0.2s ease-in-out;
+    }
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
+    }
+    button:active {
+        transform: translateY(0);
+    }
+    /* 5. Message Slide-In Animation (The Magic Touch) */
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .message-animate {
+        animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* 6. Message Bubble Styling */
+    .user-msg {
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+        color: white;
+        box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+    }
+    
+    .bot-msg {
+        background: #ffffff;
+        border: 1px solid #f3f4f6;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    }
+    </style>
+</head>
+<body class="blueprint-bg h-screen flex items-center justify-center p-4 font-sans">
+
+    <div class="relative z-10 w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[650px] border border-gray-100">
+        
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-white flex items-center shadow-lg relative">
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-blue-600 font-bold text-2xl mr-4">🎓</div>
+            <div>
+                <h1 class="font-bold text-xl">UniHelp Bot</h1>
+                <p class="text-xs text-blue-100 font-medium">Student Support Helpdesk</p>
+            </div>
+        </div>
+
+        <div id="chat-window" class="flex-1 p-5 overflow-y-auto flex flex-col space-y-5 bg-gray-50/50">
+            <div class="flex items-start msg-animate">
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-2 mt-1">🤖</div>
+                <div class="bg-white border border-gray-100 text-gray-700 p-3.5 rounded-2xl rounded-tl-sm shadow-sm text-sm">
+                    Hi there! 👋 I'm the Student Helpdesk Bot. How can I assist you today?
+                </div>
+            </div>
+
+            <div class="flex items-start msg-animate" id="typing-indicator" style="display: none;">
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-2 mt-1">🤖</div>
+                <div class="bg-white border border-gray-100 p-4 rounded-2xl rounded-tl-sm shadow-sm flex space-x-1.5 w-16 h-10 items-center justify-center">
+                    <div class="w-2 h-2 bg-blue-400 rounded-full typing-dot"></div>
+                    <div class="w-2 h-2 bg-blue-400 rounded-full typing-dot"></div>
+                    <div class="w-2 h-2 bg-blue-400 rounded-full typing-dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-4 py-2 bg-white flex space-x-2 overflow-x-auto border-t border-gray-100">
+            <button class="quick-reply text-xs text-blue-600 bg-blue-50 border border-blue-200 hover:bg-blue-100 px-3 py-1.5 rounded-full font-medium">Reset Password</button>
+            <button class="quick-reply text-xs text-blue-600 bg-blue-50 border border-blue-200 hover:bg-blue-100 px-3 py-1.5 rounded-full font-medium">Library Hours</button>
+        </div>
+
+        <div class="p-3 bg-white border-t border-gray-100">
+            <div class="flex items-center bg-gray-100 rounded-full p-1.5">
+                <input type="text" id="user-input" class="flex-1 bg-transparent px-4 py-2 text-sm focus:outline-none" placeholder="Type your question..." autocomplete="off">
+                <button id="send-btn" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-10 h-10 flex items-center justify-center">
+                    ➔
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatWindow = document.getElementById('chat-window');
+        const userInput = document.getElementById('user-input');
+        const typingIndicator = document.getElementById('typing-indicator');
+
+        function appendMessage(sender, text) {
+            const msgDiv = document.createElement('div');
+            if (sender === 'user') {
+                msgDiv.className = 'flex items-start justify-end msg-animate mb-4';
+                msgDiv.innerHTML = `<div class="bg-blue-600 text-white p-3.5 rounded-2xl rounded-tr-sm text-sm max-w-[75%]">${text}</div>`;
+            } else {
+                msgDiv.className = 'flex items-start msg-animate mb-4';
+                msgDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-2 mt-1">🤖</div>
+                    <div class="bg-white border border-gray-100 text-gray-700 p-3.5 rounded-2xl rounded-tl-sm text-sm max-w-[75%]">${text}</div>`;
+            }
+            chatWindow.insertBefore(msgDiv, typingIndicator);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        async function handleSendMessage(text) {
+            if (!text.trim()) return;
+            appendMessage('user', text);
+            userInput.value = '';
+            typingIndicator.style.display = 'flex';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            try {
+                // This connects to Python!
+               const response = await fetch('http://127.0.0.1:5001/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text })
+                });
+                const data = await response.json();
+                typingIndicator.style.display = 'none';
+                appendMessage('bot', data.reply);
+            } catch (error) {
+                typingIndicator.style.display = 'none';
+                appendMessage('bot', "Error: Make sure the Python server is running!");
+            }
+        }
+
+        document.getElementById('send-btn').addEventListener('click', () => handleSendMessage(userInput.value));
+        userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSendMessage(userInput.value); });
+        document.querySelectorAll('.quick-reply').forEach(btn => btn.addEventListener('click', () => handleSendMessage(btn.innerText)));
+    </script>
+</body>
+</html>
